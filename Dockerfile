@@ -1,14 +1,26 @@
 FROM manjarolinux/base:20240926
 RUN pacman -Syu --noconfirm
-RUN pacman -Sy --noconfirm pamac-cli libsoup3
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 RUN pacman-key --lsign-key 3056513887B78AEB
 RUN pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
 RUN pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
 RUN echo '[chaotic-aur]' >> /etc/pacman.conf
 RUN echo 'Include = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
-RUN mkdir -p /var/tmp/pamac/dbs/sync
-RUN pamac install pacman-contrib --no-confirm
-RUN sudo sed -Ei '/EnableAUR/s/^#//' /etc/pamac.conf
+RUN pacman -Sy
+RUN pacman -S --noconfirm binutils
+RUN pacman -S --noconfirm git
+RUN pacman -S --noconfirm pacman-contrib
+RUN pacman -S --noconfirm pkgconf
+RUN pacman -S --noconfirm rust
+WORKDIR /paru
+RUN useradd -m build
+RUN chown -R build:build /paru
+USER build
+COPY paru /paru
+RUN makepkg
+USER root
+RUN pacman -U --noconfirm paru-*.pkg.tar.zst
+WORKDIR /
+RUN paru --help
 RUN paccache -rk 0
-RUN pamac clean -b
+RUN paru -Sccd --noconfirm
