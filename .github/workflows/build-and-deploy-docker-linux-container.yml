@@ -1,0 +1,42 @@
+name: CI-CD
+on:
+  push:
+  pull_request:
+
+jobs:
+  success:
+    runs-on: ubuntu-24.04
+    # Run if it's not a PR, or if the PR comes from an external repository
+    if: ${{ github.event_name != 'pull_request' || github.event.repository.full_name != github.repository }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Compute name
+        # Set the image name as output
+        id: compute-name
+        run: |
+          image_name="$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]' | sed -e 's/docker-//')"
+          echo "Image name: $image_name"
+          echo "image-name=$image_name" >> $GITHUB_OUTPUT
+      - name: Compute version
+        id: compute-version
+        run: |
+          ruby -e '
+            puts "version=" + Time.now.strftime("%Y%m%d") +
+            "." +
+            File.read("Dockerfile").match(/^FROM\s+manjarolinux\/base:(\w+)\s*/)[1]
+          ' >> $GITHUB_OUTPUT
+      - name: Build Image
+        run: |
+          docker build -t "${{ steps.compute-name.outputs.image-name }}:latest" -t "${{ steps.compute-name.outputs.image-name }}:${{ steps.compute-version.outputs.version }}" .
+      - name: Login to Docker Hub
+        # if it's not a PR and it is on the master branch
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: danysk
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin docker.io
+      - name: Deploy Image
+        # Deploy if it's not a PR and the branch contains "master"
+        if: ${{ github.event_name != 'pull_request' && contains(github.ref, 'master') }}
+        run: docker push --all-tags "${{ steps.compute-name.outputs.image-name }}"
