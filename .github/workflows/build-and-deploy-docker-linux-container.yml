@@ -10,7 +10,9 @@ jobs:
     if: ${{ github.event_name != 'pull_request' || github.event.repository.full_name != github.repository }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.1
+        with:
+          submodules: 'recursive'
       - name: Compute name
         # Set the image name as output
         id: compute-name
