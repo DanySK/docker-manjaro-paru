@@ -14,12 +14,15 @@ RUN pacman -S --noconfirm pkgconf
 RUN pacman -S --noconfirm rust
 WORKDIR /paru
 RUN useradd -m build
+RUN echo 'build ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 RUN chown -R build:build /paru
 USER build
 COPY paru /paru
 RUN makepkg
 USER root
 RUN pacman -U --noconfirm paru-*.pkg.tar.zst
+WORKDIR /
+RUN rm -rf /paru
 WORKDIR /
 RUN paru --help
 RUN paccache -rk 0
