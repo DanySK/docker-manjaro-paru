@@ -1,4 +1,4 @@
-FROM manjarolinux/base:20240930
+FROM manjarolinux/base:20241001
 RUN pacman -Syu --noconfirm
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 RUN pacman-key --lsign-key 3056513887B78AEB
