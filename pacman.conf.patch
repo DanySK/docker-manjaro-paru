@@ -1,0 +1,17 @@
+--- pacman.conf    2024-10-20 14:11:20.000000000 +0000
++++ pacman.conf.new    2024-10-20 14:17:42.162893270 +0000
+@@ -30,10 +30,12 @@
+ 
+ # Misc options
+ #UseSyslog
+-#Color
++Color
+ #TotalDownload
+-#CheckSpace
++CheckSpace
+ #VerbosePkgLists
++ParallelDownloads = 8
++ILoveCandy
+ 
+ # By default, pacman accepts packages signed by keys that its local keyring
+ # trusts (see pacman-key and its man page), as well as unsigned packages.
