@@ -1,4 +1,4 @@
-FROM manjarolinux/base:20241024
+FROM manjarolinux/base:20241027
 
 # Set the base options for pacman
 RUN pacman -Sy --noconfirm patch
