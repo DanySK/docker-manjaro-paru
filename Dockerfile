@@ -7,8 +7,13 @@ RUN sed -i 's/^[[:space:]]*#\(Color\)/\1/' /etc/pacman.conf
 RUN sed -i '/^#VerbosePkgLists/a ParallelDownloads = 8' /etc/pacman.conf
 RUN sed -i '/^ParallelDownloads = 8/a ILoveCandy' /etc/pacman.conf
 
-# Configure chaotic-aur
+# Tell pacman to ignore files mounted read-only:
+RUN echo "NoExtract = etc/resolv.conf etc/hosts" >> /etc/pacman.conf
+
+# Run a full upgrade
 RUN pacman -Syu --noconfirm
+
+# Configure chaotic-aur
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
 RUN pacman-key --lsign-key 3056513887B78AEB
 RUN pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
