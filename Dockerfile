@@ -8,7 +8,8 @@ RUN sed -i '/^#VerbosePkgLists/a ParallelDownloads = 8' /etc/pacman.conf
 RUN sed -i '/^ParallelDownloads = 8/a ILoveCandy' /etc/pacman.conf
 
 # Tell pacman to ignore files mounted read-only
-RUN sed -i '/^\[options\]/a NoExtract = etc/resolv.conf etc/hosts' /etc/pacman.conf
+RUN sed -i '/^\[options\]/a NoUpgrade = etc/resolv.conf etc/hosts' /etc/pacman.conf
+RUN echo /etc/pacman.conf
 
 # Run a full upgrade
 RUN pacman -Syu --noconfirm
