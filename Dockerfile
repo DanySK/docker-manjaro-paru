@@ -1,12 +1,11 @@
 FROM manjarolinux/base:20250504
 
-# Set the base options for pacman
-RUN pacman -Sy --noconfirm patch
-WORKDIR /etc
-COPY pacman.conf.patch /etc/pacman.conf.patch
-RUN patch < pacman.conf.patch
-RUN rm /etc/pacman.conf.patch
-WORKDIR /
+# uncomment Color
+RUN sed -i 's/^[[:space:]]*#\(Color\)/\1/' /etc/pacman.conf
+
+# add ParallelDownloads and ILoveCandy after the #VerbosePkgLists line
+RUN sed -i '/^#VerbosePkgLists/a ParallelDownloads = 8' /etc/pacman.conf
+RUN sed -i '/^ParallelDownloads = 8/a ILoveCandy' /etc/pacman.conf
 
 # Configure chaotic-aur
 RUN pacman -Syu --noconfirm
