@@ -16,6 +16,9 @@ RUN pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mir
 RUN echo '[chaotic-aur]' >> /etc/pacman.conf
 RUN echo 'Include = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
 
+# Update all keyrings
+RUN pacman -Sy archlinux-keyring chaotic-keyring manjaro-keyring --noconfirm
+
 # Install paru
 RUN pacman -Sy
 RUN pacman -S --noconfirm binutils
