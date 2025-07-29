@@ -7,8 +7,8 @@ RUN sed -i 's/^[[:space:]]*#\(Color\)/\1/' /etc/pacman.conf
 RUN sed -i '/^#VerbosePkgLists/a ParallelDownloads = 8' /etc/pacman.conf
 RUN sed -i '/^ParallelDownloads = 8/a ILoveCandy' /etc/pacman.conf
 
-# Tell pacman to ignore files mounted read-only:
-RUN echo "NoExtract = etc/resolv.conf etc/hosts" >> /etc/pacman.conf
+# Tell pacman to ignore files mounted read-only
+RUN sed -i '/^\[options\]/a NoExtract = etc/resolv.conf etc/hosts' /etc/pacman.conf
 
 # Run a full upgrade
 RUN pacman -Syu --noconfirm
