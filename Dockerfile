@@ -27,11 +27,10 @@ RUN pacman -S --noconfirm pacman-contrib
 RUN pacman -S --noconfirm pkgconf
 RUN pacman -S --noconfirm rust
 WORKDIR /paru
-RUN useradd -m build
+RUN useradd -m -s /bin/zsh build
 RUN echo 'build ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 RUN chown -R build:build /paru
 USER build
-RUN chsh -s /bin/zsh build
 COPY paru /paru
 RUN makepkg
 USER root
