@@ -31,6 +31,7 @@ RUN useradd -m build
 RUN echo 'build ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 RUN chown -R build:build /paru
 USER build
+RUN chsh -s /bin/zsh build
 COPY paru /paru
 RUN makepkg
 USER root
