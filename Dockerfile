@@ -7,6 +7,12 @@ RUN sed -i 's/^[[:space:]]*#\(Color\)/\1/' /etc/pacman.conf
 RUN sed -i '/^#VerbosePkgLists/a ParallelDownloads = 8' /etc/pacman.conf
 RUN sed -i '/^ParallelDownloads = 8/a ILoveCandy' /etc/pacman.conf
 
+# Refresh the distro keyrings before any full upgrade, otherwise stale
+# trust data in older base images can break signature verification.
+RUN pacman-key --init
+RUN pacman-key --populate archlinux manjaro
+RUN pacman -Sy --noconfirm archlinux-keyring manjaro-keyring
+
 # Configure chaotic-aur
 RUN pacman -Syu --noconfirm
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
