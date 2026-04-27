@@ -26,6 +26,7 @@ RUN pacman -S --noconfirm git
 RUN pacman -S --noconfirm pacman-contrib
 RUN pacman -S --noconfirm pkgconf
 RUN pacman -S --noconfirm rust
+RUN pacman -S --noconfirm zsh
 WORKDIR /paru
 RUN useradd -m -s /bin/zsh build
 RUN echo 'build ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
